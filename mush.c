@@ -3,7 +3,7 @@
 
 static int c_terminate;
 
-int main() {
+int main(int argc, char *argv[]) {
     struct sigaction sa;
 
     c_terminate = 0;
@@ -16,6 +16,8 @@ int main() {
 
     while (pause() /* haven't gotten the interrupt signal (^C) */) {
         /* parse the command line */
+        /*parseline (argc, argv);*/ 
+ 
         /* execute the command */
         if (c_terminate == 1) {
             printf("HAHAHA\n");

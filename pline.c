@@ -2,7 +2,7 @@
 #include "pline.h"
 #include "print.h"
 
-int main (int argc, char *argv[]) {
+int parseline (int argc, char *argv[]) {
     int s_num = 0;
     
     /* FLAGS */
@@ -232,6 +232,7 @@ int main (int argc, char *argv[]) {
     }
     
     print(stage_list, new_buff);    
+    return 0;
 } 
  
 stage_stats *createStage(char *input, char *output, int num_args,
