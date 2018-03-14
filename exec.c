@@ -5,9 +5,38 @@
 #include "exec.h"
 
 
+void exec_main(stage_stats **stats, char *new_buff) {
+    int **fds;
+
+
+    fds = open_fds(stats);
+}
+
+
+int **open_fds(stage_stats **stats) {
+    int infd, outfd;
+    int fds[2];
+    int i = 0;
+
+    while (stats != NULL) {
+        if (stats[i]->input != /*stdin*/) {
+            open_fd(stats[i]->input);
+        }
+        else if (stats[i]->output != /*stdout*/) {
+            open_fd(stats[i]->output);
+        }
+        else {
+            /*pipe it*/
+            
+        i++;
+    }
+}
+
 /*returns a file descriptor*/
-int open_fd(stage_stats *stg) {
-   
+int open_fd(char *file) {
+    int fd;
+}
+    
 
 
 int fork(/*not sure yet*/) {

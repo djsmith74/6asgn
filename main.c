@@ -6,7 +6,7 @@ int main (int argc, char *argv[]) {
   
     /* Read from standard input */
     if (argc == 1) { 
-        execute_commands(); 
+        execute_command_line(); 
     }
     /* Read from provided file */
     else if (argc == 2) {
@@ -14,7 +14,7 @@ int main (int argc, char *argv[]) {
             perror("bad open");
             exit(EXIT_FAILURE);
         }
-         
+        execute_file();
     }
     /* File error due to too many arguments */
     else {
@@ -23,4 +23,5 @@ int main (int argc, char *argv[]) {
     }
 
     /* CHANGE THE IO STUFF DAN */
+
 }

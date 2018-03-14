@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int execute_file():
+int execute_file();
 int execute_command_line();
 void handler(int signum);
 

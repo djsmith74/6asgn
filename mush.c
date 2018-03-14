@@ -5,6 +5,7 @@ static int c_terminate;
 
 int execute_file () {
     struct sigaction sa;
+    char *buf[512];
 
     c_terminate = 0;
 
@@ -13,9 +14,9 @@ int execute_file () {
     sa.sa_flags = 0;
 
     sigaction(SIGINT, &sa, NULL);
-    while (/*end of file isn't yet reached*/) {
+    while (1) { /*TODO*/
         /* parse the command line */
-        parseline();
+        parseline(1);
  
         /* execute the command */
                 
@@ -44,7 +45,7 @@ int execute_command_line () {
 
     while (1) {
         /* parse the command line */
-        parseline();
+        parseline(0);
  
         /* execute the command */
                 
