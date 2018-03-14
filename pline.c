@@ -2,7 +2,7 @@
 #include "pline.h"
 #include "print.h"
 
-int parseline (int argc, char *argv[]) {
+int parseline () {
     int s_num = 0;
     
     /* FLAGS */
@@ -163,9 +163,15 @@ int parseline (int argc, char *argv[]) {
         /* SET FLAGS */
         if (strcmp(buffer[i], "<") == 0) {
             found_input = 1;
+            if (i == (max-1)) {
+                found_bad_in_redir = 1;
+            }
         }
         else if (strcmp(buffer[i], ">") == 0) {
             found_output = 1;
+            if (i == (max-1)) {
+                found_bad_out_redir = 1;
+            }
         }
         else if (strcmp(buffer[i], "|") == 0) {
             found_pipe = 1;

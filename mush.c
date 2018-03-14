@@ -3,7 +3,7 @@
 
 static int c_terminate;
 
-int main(int argc, char *argv[]) {
+int execute_commands () {
     struct sigaction sa;
 
     c_terminate = 0;
@@ -14,9 +14,9 @@ int main(int argc, char *argv[]) {
 
     sigaction(SIGINT, &sa, NULL);
 
-    while (pause() /* haven't gotten the interrupt signal (^C) */) {
+    while (1) {
         /* parse the command line */
-        /*parseline (argc, argv);*/ 
+        parseline();
  
         /* execute the command */
         if (c_terminate == 1) {

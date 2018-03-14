@@ -10,7 +10,7 @@ void print(stage_stats **stats, char *buffer) {
    while (stats[i] != NULL && i < MAX_COMMANDS && token != NULL) {
       print_stats(i, stats[i], token);
       token = strtok(NULL, "|");
-      free(stats[i]);
+      /*free(stats[i]);*/
       i++;
    }
 }
@@ -19,11 +19,7 @@ void print(stage_stats **stats, char *buffer) {
 /*prints all of the information for a stage*/
 void print_stats(int i, stage_stats *stg, char *line) {
    int k = 0;
-<<<<<<< HEAD
-  
-=======
  
->>>>>>> 253c12ad8d9bb12cf900753d860a902cfce851b9
    printf("\n--------\n");
    printf("Stage %d: \"%s\"\n", i, line);
    printf("--------\n");
@@ -52,11 +48,11 @@ void print_stats(int i, stage_stats *stg, char *line) {
    printf("\"%s\"\n", stg->arg_list[k]);
 
    /*free input string*/
-   free(stg->input_line);
+   /*free(stg->input_line);*/
 
    /*free output string*/
-   free(stg->output_line);
+   /*free(stg->output_line);*/
 
    /*free argument lists*/
-   free(stg->arg_list);
+   /*free(stg->arg_list);*/
 }
