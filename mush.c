@@ -19,6 +19,9 @@ int execute_commands () {
         parseline();
  
         /* execute the command */
+        /* get the arguments from the struct */
+
+        /* check for termination */
         if (c_terminate == 1) {
             printf("HAHAHA\n");
             break;
