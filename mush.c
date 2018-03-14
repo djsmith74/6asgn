@@ -48,12 +48,7 @@ int execute_command_line () {
         parseline(0);
  
         /* execute the command */
-<<<<<<< HEAD
         /* get the arguments from the struct */
-=======
-                
->>>>>>> b430bc2f52668a51eaa7982c3b9e1fb7743ded74
-
         /* check for termination */
         if (c_terminate == 1) {
             printf("HAHAHA\n");
