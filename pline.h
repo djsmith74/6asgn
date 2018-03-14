@@ -17,7 +17,7 @@ struct stage {
     char **arg_list;
 };
 
-int parseline (int argc, char *argv[]);
+int parseline ();
 stage_stats *createStage(char *input, char *output, int num_args,
                          char *arg_list[]);
                 

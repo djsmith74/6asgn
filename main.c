@@ -1,11 +1,12 @@
 #include "main.h"
+#include "mush.h"
 
 int main (int argc, char *argv[]) {
     int fd;  
   
     /* Read from standard input */
-    if (argc == 1) {
-        
+    if (argc == 1) { 
+        execute_commands(); 
     }
     /* Read from provided file */
     else if (argc == 2) {
@@ -13,10 +14,13 @@ int main (int argc, char *argv[]) {
             perror("bad open");
             exit(EXIT_FAILURE);
         }
+         
     }
     /* File error due to too many arguments */
     else {
         perror("too many arguments");
         exit(EXIT_FAILURE);
     }
+
+    /* CHANGE THE IO STUFF DAN */
 }

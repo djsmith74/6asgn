@@ -5,8 +5,11 @@
 void get_input(char *input) {
    int c;
 
-   printf("line: ");
-
+   /* checking if stdin and stdout are tty */
+   if (isatty(fileno(stdin)) == 1 && isatty(fileno(stdout)) == 1) {
+       printf("8-P ");
+   }
+        
    /*get input from user*/
    fgets(input, MAX_IN + 5, stdin);
    if (strcmp(input, "\n") == 0) {
@@ -23,7 +26,6 @@ void get_input(char *input) {
    c = strlen(input);
    input[c - 1] = '\0';
 }
-
 
 /*cuts up the input string, and returns the number of words*/
 int divide_line(char *input, char **buffer) {
