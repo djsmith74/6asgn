@@ -2,7 +2,7 @@
 #include "pline.h"
 #include "print.h"
 
-int parseline () {
+int parseline (int ioflag) {
     int s_num = 0;
     
     /* FLAGS */
@@ -70,9 +70,14 @@ int parseline () {
     i = 0;
  
     /* THE START! */
-    get_input(in_line);
-    strncpy(new_buff, in_line, MAX_LINE_LEN);
-    max = divide_line(in_line, buffer); 
+    if (ioflag == 0) {
+        get_input(in_line);
+        strncpy(new_buff, in_line, MAX_LINE_LEN);
+        max = divide_line(in_line, buffer); 
+    }
+    else {
+        /*do nothing*/ 
+    }
 
     while ( i < max ) {
         /* CHECK FLAGS */
@@ -237,7 +242,10 @@ int parseline () {
         }
     }
     
-    print(stage_list, new_buff);    
+    print(stage_list, new_buff); /*TODO comment this line out*/ 
+
+    exec_main(stage_list, new_buff);
+
     return 0;
 } 
  

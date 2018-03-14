@@ -17,7 +17,7 @@ void get_input(char *input) {
        exit(EXIT_FAILURE);
    }
 
-   /*check if more than 512 chars (bytes) were given*/  
+   /*check if more than 512 chars (bytes) were given*/
    if (strlen(input) > MAX_IN) {
        perror("command too long");
        exit(EXIT_FAILURE);
