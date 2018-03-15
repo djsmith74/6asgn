@@ -50,6 +50,8 @@ int execute_command_line () {
  
         /* execute the command */
         /* get the arguments from the struct */
+        /* 
+        
         /* check for termination */
         if (c_terminate == 1) {
             printf("HAHAHA\n");
@@ -64,3 +66,5 @@ void handler(int signum) {
     printf("\nCtrl-C was pressed\n");
     c_terminate = 1;
 }
+
+
