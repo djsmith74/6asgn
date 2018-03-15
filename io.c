@@ -11,7 +11,10 @@ void get_input(char *input) {
    }
         
    /*get input from user*/
-   fgets(input, MAX_IN + 5, stdin);
+   if (fgets(input, MAX_IN + 5, stdin) == NULL) {
+       printf("someone pressed that ^D AHAH\n");
+       exit(EXIT_SUCCESS);
+   } 
    if (strcmp(input, "\n") == 0) {
        perror("empty file");
        exit(EXIT_FAILURE);

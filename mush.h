@@ -7,6 +7,6 @@
 
 int execute_file();
 int execute_command_line();
-void handler(int signum);
+void sigint_handler(int signum);
 
 #endif
