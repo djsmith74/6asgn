@@ -2,6 +2,8 @@
 #include "pline.h"
 #include "print.h"
 
+/* DO THE FGETS STUFF FOR ^D */
+
 int parseline (int ioflag) {
     int s_num = 0;
     
