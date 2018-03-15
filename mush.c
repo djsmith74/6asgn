@@ -19,14 +19,15 @@ int execute_file () {
         parseline(1);
  
         /* execute the command */
-                
+        /*exec_main(*/     
 
         /* check for termination */
         if (c_terminate == 1) {
             printf("HAHAHA\n");
+            fflush(STDOUT);
             break;
             /* change this to waiting for all children to die */
-        }
+        } 
     }
     return 0;
 }

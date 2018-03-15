@@ -246,7 +246,7 @@ int parseline (int ioflag) {
     
     print(stage_list, new_buff); /*TODO comment this line out*/ 
 
-    exec_main(stage_list, new_buff);
+    /*exec_main(stage_list, new_buff);*/
 
     return 0;
 } 
@@ -261,4 +261,3 @@ stage_stats *createStage(char *input, char *output, int num_args,
     new_stage->arg_list = arg_list;
     return new_stage;
 }
-
