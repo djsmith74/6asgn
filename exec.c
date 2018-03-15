@@ -7,13 +7,70 @@
 
 void exec_main(stage_stats **stats, char *new_buff) {
     int **fds;
+    int i = 0;
+    int num;
+    char *end;
+    int old[2], next[2];
+    pid_t child;
+    
+    while (stats[i] != NULL) {
+        open_fds(stats[i]);
+        execute(stats[i]);
+    }
 
+    /*telephone*/
+    if (pipe(old)) {
+        perror("old pipe");
+        exit(EXIT_FAILURE);
+    }
+    write(old[WRITE_END], MSG, strlen(MSG));
 
-    fds = open_fds(stats);
+    for (i = 0; i < num; i++) {
+        if (i < num - 1) {   /*create new pipe*/
+            if (pipe(next)) {
+                perror("next pipe");
+                exit(EXIT_FAILURE);
+            }
+        }
+        if (!(child = fork())) {
+            /*child*/
+            if (dup2(old[READ_END], STDIN_FILENO) == -1) {
+                perror("dup2 old");
+            }
+
+            if (i < num - 1) {
+                if (dup2(next[WRITE_END], STDOUT_FILENO) == -1) {
+                    perror("dup2 new");
+                }
+            }
+
+            close(old[0]);
+            close(old[1]);
+            close(next[0]);
+            close(next[1]);
+            telephone(i);
+            exit(EXIT_SUCCESS);
+        }
+        /*parent*/
+        /*close up old pipe*/
+        close(old[0]);
+        close(old[1]);
+        old[0] = next[0];
+        old[1] = next[1];
+    }
+
+    while (num--) {
+        if (wait(NULL) == -1) {
+            perror("wait");
+        }
+    }
+    return 0;
+}
+ 
 }
 
 
-int **open_fds(stage_stats **stats) {
+int open_fds(stat) {
     int infd, outfd;
     int fds[2];
     int i = 0;
@@ -30,11 +87,6 @@ int **open_fds(stage_stats **stats) {
             
         i++;
     }
-}
-
-/*returns a file descriptor*/
-int open_fd(char *file) {
-    int fd;
 }
     
 
