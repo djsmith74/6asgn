@@ -28,6 +28,7 @@ void exec_main(stage_stats **stats) { /*, char *new_buff) {*/
 
     i = 0;
 
+    printf("before actual execution\n");
     if (list_len == 1) {
         /* execute that command line */
         printf("trying to execute \n");
