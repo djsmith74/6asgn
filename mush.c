@@ -10,7 +10,7 @@ int execute_file () {
 
     sa.sa_handler = &sigint_handler;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
+    sa.sa_flags = SA_RESTART;
 
     sigaction(SIGINT, &sa, NULL);
 
@@ -33,7 +33,7 @@ int execute_command_line () {
     
     sa.sa_handler = &sigint_handler;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
+    sa.sa_flags = SA_RESTART;
 
     sigaction(SIGINT, &sa, NULL);
 
@@ -43,7 +43,7 @@ int execute_command_line () {
         printf("post parseline\n");  
         printf("argument: %s\n", list[0]->arg_list[0]);
         /* execute the command */
-        exec_main(list);
+        /*exec_main(list);*/
 
         /* get the arguments from the struct */ 
     }
@@ -54,9 +54,15 @@ void sigint_handler(int signum) {
     struct sigaction sa, old;
  
     printf("\nCtrl-C was pressed\n");
-    sa.sa_handler = SIG_IGN;
-    sigaction(SIGINT, &sa, NULL);
-    c_terminate = 1;
+    printf("8-P ");
+    fflush(stdout);
+    /*sa.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa, &old);
+    kill(0, SIGINT);
+    sigaction(SIGINT, &old, NULL);
+    while(wait(NULL) != -1) {}
+    printf("handler");
+    c_terminate = 1;*/
 }
 
 
