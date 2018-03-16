@@ -40,7 +40,7 @@ int execute_command_line () {
     while (1) {
         /* parse the command line */
         list = parseline(0);
- 
+        printf("post parseline\n");  
         /* execute the command */
         exec_main(list);
 

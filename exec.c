@@ -30,13 +30,14 @@ void exec_main(stage_stats **stats) { /*, char *new_buff) {*/
 
     if (list_len == 1) {
         /* execute that command line */
+        printf("trying to execute \n");
         if ( strcmp(stats[i]->input_line, stdin_line) != 0 ) {
             in_fd = open(stats[i]->input_line, O_RDONLY);
-            dup2(stats[i]->input_line, STDIN_FILENO);
+            dup2(in_fd, STDIN_FILENO);
         } 
         if ( strcmp(stats[i]->output_line, stdout_line) != 0 ) {
             out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
-            dup2(stats[i]->output_line, STDOUT_FILENO);
+            dup2(out_fd, STDOUT_FILENO);
         }
         cmd = stats[i]->arg_list[0];
         execvp(cmd, stats[i]->arg_list);

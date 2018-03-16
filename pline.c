@@ -33,7 +33,7 @@ stage_stats **parseline (int ioflag) {
     char **tempa;
     int num_args;
     char *arguments[MAX_ARGS] = {NULL};
-    stage_stats *stage_list[MAX_COMMANDS+1] = {NULL};
+    stage_stats **stage_list = calloc(MAX_COMMANDS+1, sizeof(stage_stats*));
     int i;
     int j;
     int k;
