@@ -16,7 +16,9 @@ void exec_main(stage_stats **stats) { /*, char *new_buff) {*/
     char stdin_line[] = "original stdin";
     char stdout_line[] = "original stdout";
     int in_fd, out_fd;
-    char *cmd;    
+    char *cmd;
+    char cwd[MAX_PATH]; /*TODO define*/
+    struct stat sb;
 
     i = 0;
     
@@ -30,17 +32,36 @@ void exec_main(stage_stats **stats) { /*, char *new_buff) {*/
 
     if (list_len == 1) {
         /* execute that command line */
-        printf("trying to execute \n");
-        if ( strcmp(stats[i]->input_line, stdin_line) != 0 ) {
-            in_fd = open(stats[i]->input_line, O_RDONLY);
-            dup2(in_fd, STDIN_FILENO);
-        } 
-        if ( strcmp(stats[i]->output_line, stdout_line) != 0 ) {
-            out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
-            dup2(out_fd, STDOUT_FILENO);
+
+        /*check if cd*/
+        if (strcmp(stats[0]->argv[0], "cd") == 0) {
+            if (stats[0]argc == 2) {
+                /*execute the cd*/
+                /*if (getcwd(cwd, sizeof(cwd)) == NULL) {
+                    perror("getcwd");
+                    exit(EXIT_FAILURE);
+                }
+                strcat(cwd, stats[0]->argv[1]*/
+                chdir(stats[0]->argv[1]);
+
+            }
+            else {
+                printf("usage: cd <directory>\n");
+            }
         }
-        cmd = stats[i]->arg_list[0];
-        execvp(cmd, stats[i]->arg_list);
+        else {
+            printf("trying to execute \n");
+            if ( strcmp(stats[i]->input_line, stdin_line) != 0 ) {
+                in_fd = open(stats[i]->input_line, O_RDONLY);
+                dup2(in_fd, STDIN_FILENO);
+            } 
+            if ( strcmp(stats[i]->output_line, stdout_line) != 0 ) {
+                out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+                dup2(out_fd, STDOUT_FILENO);
+            }
+            cmd = stats[i]->arg_list[0];
+            execvp(cmd, stats[i]->arg_list);
+        }
     }
     
     /*telephone*/
