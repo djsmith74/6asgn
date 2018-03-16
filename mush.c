@@ -42,7 +42,7 @@ int execute_command_line () {
         list = parseline(0);
         printf("post parseline\n");  
         printf("argument: %s\n", list[0]->arg_list[0]);
-        /* execute the command */=
+        /* execute the command */
         exec_main(list); 
     }
     return 0;
@@ -52,7 +52,7 @@ void sigint_handler(int signum) {
     struct sigaction sa, old;
  
     printf("\nCtrl-C was pressed\n");
-    printf("8-P ");
+    /*printf("8-P ");*/
     fflush(stdout);
     /*sa.sa_handler = SIG_IGN;
     sigaction(SIGINT, &sa, &old);

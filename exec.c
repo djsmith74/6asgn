@@ -17,6 +17,9 @@ void exec_main(stage_stats **stats) {
     char stdin_line[] = "original stdin";
     char stdout_line[] = "original stdout";
     int in_fd, out_fd;
+    char dir[50];
+    char path[50];
+    char *slash = "/";
     char *cmd;
     /*struct stat sb;*/
 
@@ -34,10 +37,9 @@ void exec_main(stage_stats **stats) {
 
     printf("before actual execution\n");
     if (list_len == 1) {
-        /* execute that command line */
-
         /*check if cd*/
         if (strcmp(stats[0]->arg_list[0], "cd") == 0) {
+            printf("in the chdir\n");
             if (stats[0]->num_args == 2) {
                 /*execute the cd*/
                 /*if (getcwd(cwd, sizeof(cwd)) == NULL) {
@@ -45,171 +47,53 @@ void exec_main(stage_stats **stats) {
                     exit(EXIT_FAILURE);
                 }
                 strcat(cwd, stats[0]->arg_list[1]);*/
-                chdir(stats[0]->arg_list[1]);
-
+                printf("daniel is a BUTTTHOOLLEEEE\n");
+                printf("argument for cd: %s\n", stats[0]->arg_list[1]);
+                strcpy(path, stats[0]->arg_list[1]);
+                printf("path: %s\n", path);
+                strcat(dir, path);
+                strcat(dir, "/");
+                /*printf("hello\n");*/
+                /*if (chdir((stats[0]->arg_list[1])) == -1) {
+                    perror(stats[0]->arg_list[1]);
+                    exit(EXIT_FAILURE);
+                }*/
+                printf("dir: %s\n", dir);
+                chdir(dir);
+                
             }
             else {
                 printf("usage: cd <directory>\n");
             }
         }
         else {
-             printf("trying to execute \n");
-             if ( stats[i]->input_line != NULL ) {
-                 in_fd = open(stats[i]->input_line, O_RDONLY);
-                 dup2(in_fd, STDIN_FILENO);
-             } 
-             if ( stats[i]->output_line != NULL ) {
-                 out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
-                 dup2(out_fd, STDOUT_FILENO);
+             printf("trying to execute \n"); 
+             cmd = stats[i]->arg_list[0];
+             printf("command: '%s'\n", cmd);
+             child = fork();
+             if (child == -1) {
+                 perror("fork");
+                 exit(EXIT_FAILURE);
              }
-             /*cmd = stats[i]->arg_list[0];
-                printf("command: %s\n", cmd);*/
-            child = fork();
-            if (child == 0) {
-                printf("arg: %s\n", stats[i]->arg_list[0]);
-                execvp(stats[i]->arg_list[0], stats[i]->arg_list);
-                /*exit(0);*/
-            }
-            else {
-                /*while((end_id = waitpid(child, &child_status, WNOHANG | WUNTRACED)) <= 0) {
-                    if (end_id == -1) {
-                        perror("wait");
-                        exit(EXIT_FAILURE);
-                    }
-                }
-                if (child_status == 0) {
-                    exit(EXIT_SUCCESS);
-                }*/
-                /*do {
-                    tpid = wait(&child_status);
-                    if(tpid != child) process_terminated(tpid);
-                } while(tpid != child); */
+             else if (child == 0) {
+                 if ( stats[i]->input_line != NULL ) {
+                     in_fd = open(stats[i]->input_line, O_RDONLY);
+                     dup2(in_fd, STDIN_FILENO);
+                 } 
+                 if ( stats[i]->output_line != NULL ) {
+                     out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+                     dup2(out_fd, STDOUT_FILENO);
+                  }
+                  printf("arg: '%s'\n", stats[i]->arg_list[0]);
+                  printf("arg_num: %d\n", stats[i]->num_args);
+                  execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+                  /*exit(0);*/
+             }
+             else {
                 while (wait(&child_status) != child) 
                     ;
-            }
+             }
             /*exit(0);*/
         }
     }
 }    
-    /*telephone*/
-    /*if (pipe(old)) {
-        perror("old pipe");
-        exit(EXIT_FAILURE);
-    }
-    write(old[WRITE_END], MSG, strlen(MSG));
-
-    for (i = 0; i < num; i++) {
-        if (i < num - 1) {  */ /*create new pipe*/
-            /*if (pipe(next)) {
-                perror("next pipe");
-                exit(EXIT_FAILURE);
-            }
-        }
-        if (!(child = fork())) {
-            *//*child*/
-            /*if (dup2(old[READ_END], STDIN_FILENO) == -1) {
-                perror("dup2 old");
-            }
-
-            if (i < num - 1) {
-                if (dup2(next[WRITE_END], STDOUT_FILENO) == -1) {
-                    perror("dup2 new");
-                }
-            }
-
-            close(old[0]);
-            close(old[1]);
-            close(next[0]);
-            close(next[1]);
-            telephone(i);
-            exit(EXIT_SUCCESS);
-        }*/
-        /*parent*/
-        /*close up old pipe*/
-        /*close(old[0]);
-        close(old[1]);
-        old[0] = next[0];
-        old[1] = next[1];
-    }
-
-    while (num--) {
-        if (wait(NULL) == -1) {
-            perror("wait");
-        }
-    }
-    return 0;
-}*/
-
-
-
-/*int open_fds(stat) {
-    int infd, outfd;
-    int fds[2];
-    int i = 0;
-
-    while (stats != NULL) {
-        if (stats[i]->input != *//*stdin*//*) {
-            open_fd(stats[i]->input);
-        }
-        else if (stats[i]->output != *//*stdout*//*) {
-            open_fd(stats[i]->output);
-        }
-        else {*/
-            /*pipe it*/
-            
-        /*i++;
-    }
-}*/
-    
-
-
-/*int fork(*//*not sure yet*//*) {
-
-   pid_t pidc, pid;
-   int status = 0;
-   char *file;
-
-   pidc = 0;
-   pid = 0;
-
-   if (argc < 2 || argc > 2) {
-      printf("usage: tryit command\n");
-      exit(1);
-   }
-
-
-   if((pid = fork()) < 0) {
-      perror("fork");
-      exit(EXIT_FAILURE);
-   }
-
-   
-
-   if (pid == 0) {*/
-      /*child*/
-      /*file = basename(argv[1]);
-      if (execl(argv[1], file, NULL) == -1) {
-         perror(argv[1]);
-         exit(EXIT_FAILURE);
-      }
-      else {
-         exit(EXIT_SUCCESS);
-      }
-   }
-   else {*/
-      /*parent*/
-      /*while ((pidc = waitpid(pid, &status, WNOHANG|WUNTRACED)) == 0) {
-         ;
-      }
-
-      if (status > 0) {
-         printf("Process %d exited with an error value.\n", pidc);
-         exit(EXIT_FAILURE);
-      }
-      else {
-         printf("Process %d succeeded.\n", pidc);
-         exit(EXIT_SUCCESS);
-      }
-   }
-   return 0;
-}*/
