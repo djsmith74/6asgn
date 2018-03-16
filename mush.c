@@ -63,4 +63,3 @@ void sigint_handler(int signum) {
     c_terminate = 1;*/
 }
 
-

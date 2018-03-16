@@ -18,7 +18,6 @@ struct stage {
 };*/
 
 typedef struct stage {
-    char **c_line;
     char *input_line;
     char *output_line;
     int num_args;

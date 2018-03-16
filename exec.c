@@ -26,7 +26,7 @@ void exec_main(stage_stats **stats) {
     list_len = 0;
     i = 0;
     
-    while (stats[i] != NULL) {
+    while (stats[i] != 0) {
         list_len++; 
         i++;
     }
@@ -47,7 +47,6 @@ void exec_main(stage_stats **stats) {
                     exit(EXIT_FAILURE);
                 }
                 strcat(cwd, stats[0]->arg_list[1]);*/
-                printf("daniel is a BUTTTHOOLLEEEE\n");
                 printf("argument for cd: %s\n", stats[0]->arg_list[1]);
                 strcpy(path, stats[0]->arg_list[1]);
                 printf("path: %s\n", path);

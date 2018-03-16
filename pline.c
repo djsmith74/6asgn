@@ -47,7 +47,7 @@ stage_stats **parseline (int ioflag) {
     char stdout_line[] = "original stdout";
 
     char in_line[MAX_LINE_LEN+5] = {0};
-    char *buffer[MAX_LINE_LEN];
+    char *buffer[MAX_LINE_LEN+1] = {0};
     char new_buff[MAX_LINE_LEN+1] = {0};
 
     input = NULL;
@@ -245,7 +245,7 @@ stage_stats **parseline (int ioflag) {
         }
     }
     
-    print(stage_list, new_buff); /*TODO comment this line out*/ 
+    /*print(stage_list, new_buff);*/ /*TODO comment this line out*/ 
 
     /*exec_main(stage_list, new_buff);*/
 
