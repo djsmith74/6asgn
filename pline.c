@@ -159,7 +159,7 @@ stage_stats **parseline (int ioflag) {
                 input = NULL;
                 output = NULL;
                 num_args = 0;
-                for (j = 0; j < MAX_ARGS; j++) {
+                for (j = 0; j < MAX_ARGS+1; j++) {
                    arguments[j] = NULL;
                 }
                 args_index = 0;

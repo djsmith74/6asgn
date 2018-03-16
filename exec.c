@@ -4,20 +4,20 @@
 
 #include "exec.h"
 
-void exec_main(stage_stats **stats) { /*, char *new_buff) {*/
+void exec_main(stage_stats **stats) {
     /*int **fds;
     int i = 0;
     int num;
     char *end;
-    int old[2], next[2];
-    pid_t child;*/
+    int old[2], next[2];*/
+    pid_t child, end_id, tpid;
+    int child_status;
     int i;
     int list_len;
     char stdin_line[] = "original stdin";
     char stdout_line[] = "original stdout";
     int in_fd, out_fd;
     char *cmd;
-    /*char cwd[MAX_PATH];*/ /*TODO define*/
     /*struct stat sb;*/
 
     list_len = 0;
@@ -37,38 +37,60 @@ void exec_main(stage_stats **stats) { /*, char *new_buff) {*/
         /* execute that command line */
 
         /*check if cd*/
-        /*if (strcmp(stats[0]->argv[0], "cd") == 0) {
-            if (stats[0]argc == 2) {*/
+        if (strcmp(stats[0]->arg_list[0], "cd") == 0) {
+            if (stats[0]->num_args == 2) {
                 /*execute the cd*/
                 /*if (getcwd(cwd, sizeof(cwd)) == NULL) {
                     perror("getcwd");
                     exit(EXIT_FAILURE);
                 }
-                strcat(cwd, stats[0]->argv[1]*/
-                /*chdir(stats[0]->argv[1]);
+                strcat(cwd, stats[0]->arg_list[1]);*/
+                chdir(stats[0]->arg_list[1]);
 
             }
             else {
                 printf("usage: cd <directory>\n");
             }
         }
-        else {*/
-            printf("trying to execute \n");
-            if ( stats[i]->input_line != NULL ) {
-                in_fd = open(stats[i]->input_line, O_RDONLY);
-                dup2(in_fd, STDIN_FILENO);
-            } 
-            if ( stats[i]->output_line != NULL ) {
-                out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
-                dup2(out_fd, STDOUT_FILENO);
+        else {
+             printf("trying to execute \n");
+             if ( stats[i]->input_line != NULL ) {
+                 in_fd = open(stats[i]->input_line, O_RDONLY);
+                 dup2(in_fd, STDIN_FILENO);
+             } 
+             if ( stats[i]->output_line != NULL ) {
+                 out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+                 dup2(out_fd, STDOUT_FILENO);
+             }
+             /*cmd = stats[i]->arg_list[0];
+                printf("command: %s\n", cmd);*/
+            child = fork();
+            if (child == 0) {
+                printf("arg: %s\n", stats[i]->arg_list[0]);
+                execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+                /*exit(0);*/
             }
-            cmd = stats[i]->arg_list[0];
-            printf("command: %s\n", cmd);
-            /*execvp(stats[i]->arg_list[0], stats[i]->arg_list);*/
-            execlp("ls", "ls", NULL);
-        /*}*/
+            else {
+                /*while((end_id = waitpid(child, &child_status, WNOHANG | WUNTRACED)) <= 0) {
+                    if (end_id == -1) {
+                        perror("wait");
+                        exit(EXIT_FAILURE);
+                    }
+                }
+                if (child_status == 0) {
+                    exit(EXIT_SUCCESS);
+                }*/
+                /*do {
+                    tpid = wait(&child_status);
+                    if(tpid != child) process_terminated(tpid);
+                } while(tpid != child); */
+                while (wait(&child_status) != child) 
+                    ;
+            }
+            /*exit(0);*/
+        }
     }
-    
+}    
     /*telephone*/
     /*if (pipe(old)) {
         perror("old pipe");
@@ -117,7 +139,7 @@ void exec_main(stage_stats **stats) { /*, char *new_buff) {*/
     }
     return 0;
 }*/
-}
+
 
 
 /*int open_fds(stat) {

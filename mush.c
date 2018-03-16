@@ -42,10 +42,8 @@ int execute_command_line () {
         list = parseline(0);
         printf("post parseline\n");  
         printf("argument: %s\n", list[0]->arg_list[0]);
-        /* execute the command */
-        /*exec_main(list);*/
-
-        /* get the arguments from the struct */ 
+        /* execute the command */=
+        exec_main(list); 
     }
     return 0;
 }
