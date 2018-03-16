@@ -27,7 +27,7 @@ int execute_file () {
 
 int execute_command_line () {
     struct sigaction sa;
-    struct stage_stats **list;
+    stage_stats **list;
     
     c_terminate = 0;
     
