@@ -1,6 +1,6 @@
 CC = gcc
 
-CFLAGS = -Wall -pedantic -ansi -D_POSIX_C_SOURCE -g -std=c99
+CFLAGS = -Wall -pedantic -ansi -D_POSIX_C_SOURCE=200809L -g -std=c99
 
 LD = gcc
 
