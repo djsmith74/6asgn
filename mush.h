@@ -4,6 +4,8 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "exec.h"
+#include "pline.h"
 
 int execute_file();
 int execute_command_line();

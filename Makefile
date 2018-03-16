@@ -8,23 +8,26 @@ LDFLAGS =
 
 all: mush
 
-mush: io.o pline.o print.o mush.o main.o
-	$(LD) $(CFLAGS) -o mush io.o pline.o print.o mush.o main.o
+mush: io.o pline.o print.o exec.o mush.o main.o
+	$(LD) $(CFLAGS) -o mush io.o pline.o print.o exec.o mush.o main.o
 
-io.o: io.c io.h
+io.o: io.c
 	$(CC) $(CFLAGS) -c io.c 
 
-mush.o: mush.c mush.h
+mush.o: mush.c
 	$(CC) $(CFLAGS) -c mush.c
 
 main.o: main.c 
 	$(LD) $(CFLAGS) -c main.c
 
-pline.o: pline.c pline.h
+pline.o: pline.c
 	$(CC) $(CLFAGS) -c pline.c
 
-print.o: print.c print.h
+print.o: print.c
 	$(CC) $(CFLAGS) -c print.c 
+
+exec.o: exec.c
+	$(CC) $(CFLAGS) -c exec.c
 
 clean: 
 	rm -f *.o mush

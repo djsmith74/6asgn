@@ -4,7 +4,7 @@
 
 /* DO THE FGETS STUFF FOR ^D */
 
-int parseline (int ioflag) {
+stage_stats **parseline (int ioflag) {
     int s_num = 0;
     
     /* FLAGS */
@@ -33,7 +33,7 @@ int parseline (int ioflag) {
     char **tempa;
     int num_args;
     char *arguments[MAX_ARGS] = {NULL};
-    stage_stats *stage_list[MAX_COMMANDS] = {NULL};
+    stage_stats *stage_list[MAX_COMMANDS+1] = {NULL};
     int i;
     int j;
     int k;
@@ -248,7 +248,7 @@ int parseline (int ioflag) {
 
     /*exec_main(stage_list, new_buff);*/
 
-    return 0;
+    return stage_list;
 } 
  
 stage_stats *createStage(char *input, char *output, int num_args,
