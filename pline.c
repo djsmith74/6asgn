@@ -32,7 +32,8 @@ stage_stats **parseline (int ioflag) {
     char *tempo;
     char **tempa;
     int num_args;
-    char *arguments[MAX_ARGS] = {NULL};
+    /*char *arguments[MAX_ARGS] = {NULL};*/
+    char **arguments = calloc(MAX_ARGS+1, sizeof(char*));
     stage_stats **stage_list = calloc(MAX_COMMANDS+1, sizeof(stage_stats*));
     int i;
     int j;
@@ -224,12 +225,12 @@ stage_stats **parseline (int ioflag) {
         i++;
     }
     
-    if (input == NULL && pipe_num == 0) {
+    /*if (input == NULL && pipe_num == 0) {
         input = stdin_line;
     }
     if (output == NULL) {
         output = stdout_line;
-    }
+    }*/
     if (num_args == 0) {
         perror("empty");
         exit(EXIT_FAILURE);

@@ -8,8 +8,8 @@ LDFLAGS =
 
 all: mush
 
-mush: io.o pline.o print.o exec.o mush.o main.o
-	$(LD) $(CFLAGS) -o mush io.o pline.o print.o exec.o mush.o main.o
+mush: main.o io.o pline.o print.o exec.o mush.o
+	$(LD) $(CFLAGS) -o mush main.o io.o pline.o print.o exec.o mush.o
 
 io.o: io.c
 	$(CC) $(CFLAGS) -c io.c 
