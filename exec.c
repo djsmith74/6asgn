@@ -5,24 +5,12 @@
 #include "exec.h"
 
 void exec_main(stage_stats **stats) {
-    /*int **fds;
-    int i = 0;
-    int num;
-    char *end;
-    int old[2], next[2];*/
-    pid_t child, end_id, tpid;
+    pid_t child;
     int child_status;
     int i;
     int list_len;
-    char stdin_line[] = "original stdin";
-    char stdout_line[] = "original stdout";
-    int in_fd, out_fd;
-    char dir[50];
-    char path[50];
-    char *slash = "/";
     char *cmd;
-    /*struct stat sb;*/
-
+    
     list_len = 0;
     i = 0;
     
@@ -30,37 +18,19 @@ void exec_main(stage_stats **stats) {
         list_len++; 
         i++;
     }
-    printf("number of stages: %d", list_len);
+    printf("number of stages: %d\n", list_len);
 
     printf("list_len: %d\n", list_len);
 
     i = 0;
-
+    
     printf("before actual execution\n");
     if (list_len == 1) {
         /*check if cd*/
         if (strcmp(stats[0]->arg_list[0], "cd") == 0) {
             printf("in the chdir\n");
             if (stats[0]->num_args == 2) {
-                /*execute the cd*/
-                /*if (getcwd(cwd, sizeof(cwd)) == NULL) {
-                    perror("getcwd");
-                    exit(EXIT_FAILURE);
-                }
-                strcat(cwd, stats[0]->arg_list[1]);*/
-                printf("argument for cd: %s\n", stats[0]->arg_list[1]);
-                strcpy(path, stats[0]->arg_list[1]);
-                printf("path: %s\n", path);
-                strcat(dir, path);
-                strcat(dir, "/");
-                /*printf("hello\n");*/
-                /*if (chdir((stats[0]->arg_list[1])) == -1) {
-                    perror(stats[0]->arg_list[1]);
-                    exit(EXIT_FAILURE);
-                }*/
-                printf("dir: %s\n", dir);
-                chdir(dir);
-                
+                cd(stats[0]->arg_list[1]); 
             }
             else {
                 printf("usage: cd <directory>\n");
@@ -76,24 +46,226 @@ void exec_main(stage_stats **stats) {
                  exit(EXIT_FAILURE);
              }
              else if (child == 0) {
-                 if ( stats[i]->input_line != NULL ) {
-                     in_fd = open(stats[i]->input_line, O_RDONLY);
-                     dup2(in_fd, STDIN_FILENO);
-                 } 
-                 if ( stats[i]->output_line != NULL ) {
-                     out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
-                     dup2(out_fd, STDOUT_FILENO);
-                  }
-                  printf("arg: '%s'\n", stats[i]->arg_list[0]);
-                  printf("arg_num: %d\n", stats[i]->num_args);
-                  execvp(stats[i]->arg_list[0], stats[i]->arg_list);
-                  /*exit(0);*/
+                 exec_command(stats);       
              }
              else {
                 while (wait(&child_status) != child) 
                     ;
              }
-            /*exit(0);*/
         }
     }
+    else if (list_len == 2) {
+        exec_single_pipe(stats);          
+    }
+    else if (list_len > 2) {
+        exec_pipes(stats);
+    }
+    else {
+        perror("pipes");
+        exit(EXIT_FAILURE);
+    }
 }    
+
+int cd(char *path) {
+    char dir[50];
+    char path_cp[50];
+     
+    /*execute the cd*/
+    /*if (getcwd(cwd, sizeof(cwd)) == NULL) {
+          perror("getcwd");
+          exit(EXIT_FAILURE);
+      }
+      strcat(cwd, stats[0]->arg_list[1]);*/
+      /*printf("argument for cd: %s\n", stats[0]->arg_list[1]);*/
+      strcpy(path_cp, path);
+      /*printf("path: %s\n", path);*/
+      strcat(dir, path_cp);
+      strcat(dir, "/");
+      /*printf("hello\n");*/
+      /*if (chdir((stats[0]->arg_list[1])) == -1) {
+          perror(stats[0]->arg_list[1]);
+          exit(EXIT_FAILURE);
+       }*/
+      printf("dir: %s\n", dir);
+      chdir(dir);
+      return 0;          
+}
+
+int exec_command(stage_stats **stats) {
+     int in_fd, out_fd;
+     int i;
+
+     i = 0;
+     if ( stats[i]->input_line != NULL ) {
+         in_fd = open(stats[i]->input_line, O_RDONLY);
+         dup2(in_fd, STDIN_FILENO);
+     } 
+     if ( stats[i]->output_line != NULL ) {
+         out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+         dup2(out_fd, STDOUT_FILENO);
+     }
+     printf("arg: '%s'\n", stats[i]->arg_list[0]);
+     printf("arg_num: %d\n", stats[i]->num_args);
+     execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+     fflush(stdout);
+     return 0;
+}
+
+int exec_single_pipe(stage_stats **stats) {
+    int in_fd, out_fd;
+    int child_status;
+    int one[2] = {0};
+    int i;
+    pid_t child1, child2;
+     
+    if ( pipe(one) ) { 
+        perror("First pipe"); 
+        exit(-1);
+    }
+
+    if (!(child1 = fork())) {
+        i = 0;
+        /* child one stuff */
+        /* dup appropriate pipe ends */
+        printf("input line: %s\n", stats[i]->input_line);
+        if ( stats[i]->input_line != NULL ) {
+            in_fd = open(stats[i]->input_line, O_RDONLY);
+            dup2(in_fd, STDIN_FILENO);
+            printf("love you :)\n");
+        } 
+        printf("pre dupdup\n");
+        printf("stdout_fileno: %d\n", STDOUT_FILENO);
+        if (-1 == dup2(one[WRITE_END], STDOUT_FILENO)) {
+            perror("dup2"); 
+            exit(-1);
+        }
+        printf("pre cleanup\n");
+         
+        /* clean up */ 
+        close(one[READ_END]); 
+        close(one[WRITE_END]); 
+        printf("post cleanup\n");
+
+        /* do the exec */ 
+        execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
+        fflush(stdout);
+        perror(stats[i]->arg_list[0]);
+        exit(-1);
+    }
+ 
+    if (!(child2 = fork())) {
+        i = 1;
+        /* child two stuff */
+        if ( stats[i]->output_line != NULL ) {
+            out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+            dup2(out_fd, STDOUT_FILENO);
+        }
+
+        if (-1 == dup2(one[READ_END], STDIN_FILENO)) {    
+            perror("dup2");
+            exit(-1); 
+        }
+
+        /* clean up */ 
+        close(one[READ_END]); 
+        close(one[WRITE_END]);
+
+        /* do the exec */ 
+        execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
+        fflush(stdout);
+        perror(stats[i]->arg_list[0]);
+        exit(-1);
+    } 
+    close(one[READ_END]);
+    close(one[WRITE_END]);
+
+    if (-1 == wait(NULL)) {
+        perror("wait");
+    }
+    if (-1 == wait(NULL)) {
+        perror("wait");
+    }
+    return 0;
+}
+
+int exec_pipes(stage_stats **stats) {
+    int in_fd, out_fd;
+    int child_status;
+    int one[2] = {0};
+    int i;
+    pid_t child1, child2;
+     
+    if ( pipe(one) ) { 
+        perror("First pipe"); 
+        exit(-1);
+    }
+
+    if (!(child1 = fork())) {
+        i = 0;
+        /* child one stuff */
+        /* dup appropriate pipe ends */
+        printf("input line: %s\n", stats[i]->input_line);
+        if ( stats[i]->input_line != NULL ) {
+            in_fd = open(stats[i]->input_line, O_RDONLY);
+            dup2(in_fd, STDIN_FILENO);
+            printf("love you :)\n");
+        } 
+        printf("pre dupdup\n");
+        printf("stdout_fileno: %d\n", STDOUT_FILENO);
+        if (-1 == dup2(one[WRITE_END], STDOUT_FILENO)) {
+            perror("dup2"); 
+            exit(-1);
+        }
+        printf("pre cleanup\n");
+         
+        /* clean up */ 
+        close(one[READ_END]); 
+        close(one[WRITE_END]); 
+        printf("post cleanup\n");
+
+        /* do the exec */ 
+        execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
+        fflush(stdout);
+        perror(stats[i]->arg_list[0]);
+        exit(-1);
+    }
+ 
+    while(i < (list_len-1)) {
+    
+    }
+  
+    if (!(child2 = fork())) {
+        i = 1;
+        /* child two stuff */
+        if ( stats[i]->output_line != NULL ) {
+            out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+            dup2(out_fd, STDOUT_FILENO);
+        }
+
+        if (-1 == dup2(one[READ_END], STDIN_FILENO)) {    
+            perror("dup2");
+            exit(-1); 
+        }
+
+        /* clean up */ 
+        close(one[READ_END]); 
+        close(one[WRITE_END]);
+
+        /* do the exec */ 
+        execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
+        fflush(stdout);
+        perror(stats[i]->arg_list[0]);
+        exit(-1);
+    } 
+    close(one[READ_END]);
+    close(one[WRITE_END]);
+
+    if (-1 == wait(NULL)) {
+        perror("wait");
+    }
+    if (-1 == wait(NULL)) {
+        perror("wait");
+    }    
+    return 0;
+}
+

@@ -109,9 +109,9 @@ stage_stats **parsing(char *in_line, char **buffer, int max) {
                 exit(EXIT_FAILURE);
             }
             else {
-                if (pipe_num == 0 && input == NULL) {
+                /*if (pipe_num == 0 && input == NULL) {
                     input = stdin_line;
-                } 
+                } */
                 if (input == NULL) {
                    tempi = NULL;
                 }
