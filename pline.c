@@ -45,10 +45,13 @@ stage_stats **parseline (int ioflag) {
     /* INITIATION */
     char stdin_line[] = "original stdin";
     char stdout_line[] = "original stdout";
-
-    char in_line[MAX_LINE_LEN+5] = {0};
+    
+    /*char in_line[MAX_LINE_LEN+5] = {0};
     char *buffer[MAX_LINE_LEN+1] = {0};
-    char new_buff[MAX_LINE_LEN+1] = {0};
+    char new_buff[MAX_LINE_LEN+1] = {0};*/
+    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
+    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
+    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
 
     input = NULL;
     output = NULL;
