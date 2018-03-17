@@ -1,7 +1,9 @@
 #include "main.h"
 
 int main (int argc, char *argv[]) {
-    int fd;  
+    int fd;
+    FILE *file;
+    char buf[MAX_PATH];
   
     /* Read from standard input */
     if (argc == 1) {  
@@ -11,11 +13,11 @@ int main (int argc, char *argv[]) {
     /* Read from provided file */
     else if (argc == 2) {
         printf("more than one argument\n");
-        if((fd = open(argv[1], O_RDONLY)) == -1) {
+        if ((file = fopen(argv[1], 'r')) == NULL) {
             perror("bad open");
             exit(EXIT_FAILURE);
         }
-        execute_file();
+        execute_file(file);
     }
     /* File error due to too many arguments */
     else {

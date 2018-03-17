@@ -24,7 +24,8 @@ typedef struct stage {
     char **arg_list;
 } stage_stats;
 
-stage_stats **parseline (int ioflag);
+stage_stats **parseline(FILE *file);
+stage_stats **parsing(char *in_line, char **buffer, int max);
 stage_stats *createStage(char *input, char *output, int num_args,
                          char *arg_list[]);
                 

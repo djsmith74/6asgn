@@ -30,6 +30,7 @@ void exec_main(stage_stats **stats) {
         list_len++; 
         i++;
     }
+    printf("number of stages: %d", list_len);
 
     printf("list_len: %d\n", list_len);
 

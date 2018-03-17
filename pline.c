@@ -4,7 +4,34 @@
 
 /* DO THE FGETS STUFF FOR ^D */
 
-stage_stats **parseline (int ioflag) {
+stage_stats **parseline (FILE *file) {
+
+    stage_stats **stage_list;
+    int max;
+    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
+    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
+    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
+
+     
+    /* THE START! */
+    if (file == NULL) {
+        get_input(in_line);
+        strncpy(new_buff, in_line, MAX_LINE_LEN);
+        max = divide_line(in_line, buffer);
+        stage_list = parsing(in_line, buffer, max);
+    }
+    else {
+        while (fgets(in_line, MAX_LINE_LEN+5, file) != NULL) {
+            max = divide_line(in_line, buffer);
+            stage_list = parsing(in_line, buffer, max); 
+        }
+    }
+
+    return stage_list;
+}
+
+
+stage_stats **parsing(char *in_line, char **buffer, int max) {
     int s_num = 0;
     
     /* FLAGS */
@@ -21,7 +48,6 @@ stage_stats **parseline (int ioflag) {
     int found_bad_out_redir;
 
     /* VARIABLES */
-    int max;
     int args_index;
     int stage_num;
     int pipe_num;
@@ -46,13 +72,6 @@ stage_stats **parseline (int ioflag) {
     char stdin_line[] = "original stdin";
     char stdout_line[] = "original stdout";
     
-    /*char in_line[MAX_LINE_LEN+5] = {0};
-    char *buffer[MAX_LINE_LEN+1] = {0};
-    char new_buff[MAX_LINE_LEN+1] = {0};*/
-    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
-    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
-    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
-
     input = NULL;
     output = NULL;
     tempi = NULL;
@@ -74,16 +93,6 @@ stage_stats **parseline (int ioflag) {
     num_args = 0;
     pipe_num = 0;
     i = 0;
- 
-    /* THE START! */
-    if (ioflag == 0) {
-        get_input(in_line);
-        strncpy(new_buff, in_line, MAX_LINE_LEN);
-        max = divide_line(in_line, buffer); 
-    }
-    else {
-        /*do nothing*/ 
-    }
 
     while ( i < max ) {
         /* CHECK FLAGS */

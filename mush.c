@@ -2,7 +2,7 @@
 
 static int c_terminate;
 
-int execute_file () {
+int execute_file (FILE *file) {
     struct sigaction sa;
     /*char *buf[512];*/
 
@@ -14,13 +14,14 @@ int execute_file () {
 
     sigaction(SIGINT, &sa, NULL);
 
-    while (1) { /*TODO*/
+    parseline(file);
+    /*while () { */
         /* parse the command line */
-        parseline(1);
+        /*parseline(file);*/
  
         /* execute the command */
         /*exec_main(*/      
-    }
+    
     return 0;
 }
  
@@ -39,7 +40,7 @@ int execute_command_line () {
 
     while (1) {
         /* parse the command line */
-        list = parseline(0);
+        list = parseline(NULL);
         printf("post parseline\n");  
         printf("argument: %s\n", list[0]->arg_list[0]);
         /* execute the command */

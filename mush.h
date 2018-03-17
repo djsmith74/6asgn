@@ -9,7 +9,7 @@
 #include "exec.h"
 #include "pline.h"
 
-int execute_file();
+int execute_file(FILE *file);
 int execute_command_line();
 void sigint_handler(int signum);
 
