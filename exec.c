@@ -58,7 +58,7 @@ void exec_main(stage_stats **stats) {
         exec_single_pipe(stats);          
     }
     else if (list_len > 2) {
-        exec_pipes(stats);
+        exec_pipes(stats, list_len);
     }
     else {
         perror("pipes");
@@ -67,8 +67,8 @@ void exec_main(stage_stats **stats) {
 }    
 
 int cd(char *path) {
-    char dir[50];/*TODO MAGIC*/
-    char path_cp[50];
+    char *dir = calloc(50, sizeof(char)); /*get rid of magic*/
+    char *path_cp = calloc(50, sizeof(char));
      
     /*execute the cd*/
     /*if (getcwd(cwd, sizeof(cwd)) == NULL) {
@@ -188,19 +188,20 @@ int exec_single_pipe(stage_stats **stats) {
     return 0;
 }
 
-int exec_pipes(stage_stats **stats) {
+int exec_pipes(stage_stats **stats, int l_len) {
     int in_fd, out_fd;
     int child_status;
+    int num_children;
     int one[2] = {0};
     int i;
     pid_t child1, child2;
-    int num_children;
+    int k;
     int fd[2];
     int readfd[num_children];
     int writefd[num_children];    
     int procID[num_children];
  
-    
+    num_children = l_len - 2;
 
     if ( pipe(one) ) { 
         perror("First pipe"); 
@@ -238,7 +239,7 @@ int exec_pipes(stage_stats **stats) {
     }
  
     while(i < (list_len-1)) {
-    
+        i++;   
     }
   
     if (!(child2 = fork())) {
