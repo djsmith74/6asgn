@@ -1,10 +1,16 @@
 #include "mush.h"
+#include "io.h"
 
 static int c_terminate;
 
 int execute_file (FILE *file) {
     struct sigaction sa;
-    /*char *buf[512];*/
+    stage_stats **list;
+    int max;
+    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
+    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
+    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
+    char *pos;
 
     c_terminate = 0;
 
@@ -13,15 +19,21 @@ int execute_file (FILE *file) {
     sa.sa_flags = SA_RESTART;
 
     sigaction(SIGINT, &sa, NULL);
-
-    parseline(file);
-    /*while () { */
-        /* parse the command line */
-        /*parseline(file);*/
- 
-        /* execute the command */
-        /*exec_main(*/      
+    printf("haters dab back\n");
     
+
+    while (fgets(in_line, MAX_LINE_LEN+5, file) != NULL) {
+            /*remove newline character*/
+            if ((pos = strchr(in_line, '\n')) != NULL) {
+                *pos = '\0';
+            }
+            
+            max = divide_line(in_line, buffer);
+            list = parsing(in_line, buffer, max); 
+        
+            exec_main(list);
+    }
+
     return 0;
 }
  
@@ -29,7 +41,11 @@ int execute_file (FILE *file) {
 int execute_command_line () {
     struct sigaction sa;
     stage_stats **list;
-    
+    int max;
+    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
+    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
+    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
+
     c_terminate = 0;
     
     sa.sa_handler = &sigint_handler;
@@ -39,8 +55,13 @@ int execute_command_line () {
     sigaction(SIGINT, &sa, NULL);
 
     while (1) {
-        /* parse the command line */
-        list = parseline(NULL);
+
+        get_input(in_line);
+        strncpy(new_buff, in_line, MAX_LINE);
+        max = divide_line(in_line, buffer);
+
+        list = parsing(in_line, buffer, max);
+
         printf("post parseline\n");  
         printf("argument: %s\n", list[0]->arg_list[0]);
         /* execute the command */

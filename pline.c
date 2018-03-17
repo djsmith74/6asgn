@@ -1,34 +1,7 @@
-#include "io.h"
 #include "pline.h"
 #include "print.h"
 
 /* DO THE FGETS STUFF FOR ^D */
-
-stage_stats **parseline (FILE *file) {
-
-    stage_stats **stage_list;
-    int max;
-    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
-    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
-    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
-
-     
-    /* THE START! */
-    if (file == NULL) {
-        get_input(in_line);
-        strncpy(new_buff, in_line, MAX_LINE_LEN);
-        max = divide_line(in_line, buffer);
-        stage_list = parsing(in_line, buffer, max);
-    }
-    else {
-        while (fgets(in_line, MAX_LINE_LEN+5, file) != NULL) {
-            max = divide_line(in_line, buffer);
-            stage_list = parsing(in_line, buffer, max); 
-        }
-    }
-
-    return stage_list;
-}
 
 
 stage_stats **parsing(char *in_line, char **buffer, int max) {

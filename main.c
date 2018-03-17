@@ -13,10 +13,12 @@ int main (int argc, char *argv[]) {
     /* Read from provided file */
     else if (argc == 2) {
         printf("more than one argument\n");
-        if ((file = fopen(argv[1], 'r')) == NULL) {
+        if ((file = fopen(argv[1], "r")) == NULL) {
             perror("bad open");
+            printf("hello daberoni i've been expecting you\n");
             exit(EXIT_FAILURE);
         }
+        printf("yo yo\n");
         execute_file(file);
     }
     /* File error due to too many arguments */

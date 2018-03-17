@@ -9,6 +9,7 @@
 #include "exec.h"
 #include "pline.h"
 
+#define MAX_LINE 512
 int execute_file(FILE *file);
 int execute_command_line();
 void sigint_handler(int signum);
