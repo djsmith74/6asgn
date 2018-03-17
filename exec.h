@@ -19,6 +19,6 @@ void exec_main(stage_stats **stats);
 int cd(char *path);
 int exec_command(stage_stats **stats);
 int exec_single_pipe(stage_stats **stats);
-int exec_pipes(stage_stats **stats);
+int exec_pipes(stage_stats **stats, int l_len);
 
 #endif

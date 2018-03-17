@@ -238,7 +238,41 @@ int exec_pipes(stage_stats **stats, int l_len) {
         exit(-1);
     }
  
-    while(i < (list_len-1)) {
+    while(i < (l_len-1)) {
+        if (pipe(fd)) {
+            perror("pipe");
+            exit(-1);
+        }
+        /* Storing the pipe ID */
+        readfd[i] = fd[0];
+        writefd[i] = fd[1];
+        /*if (procID[i] = fork() == -1) {
+            perror("bad fork")
+            exit(EXIT_FAILURE);
+        } 
+        if (procID[i] == 0) {
+            
+            dup2(writefd[i], STDOUT_FILENO);
+        }*/
+        if (!(procID[i] = fork())) {
+            /*if (-1 == dup2(readfd[i], STDIN_FILENO)) {
+                perror("dup2");
+                exit(-1);
+            }*/
+            if (-1 == dup2(writefd[i], STDOUT_FILENO)) {
+                perror("dup2");
+                exit(-1);
+            }
+
+            /* clean up */
+            close(readfd[i]);
+
+            /* do the exec */
+            execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+            fflush(stdout);
+            perror(stats[i]->arg_list[0]);
+            exit(-1);
+        }
         i++;   
     }
   
