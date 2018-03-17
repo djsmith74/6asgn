@@ -67,7 +67,7 @@ void exec_main(stage_stats **stats) {
 }    
 
 int cd(char *path) {
-    char dir[50];
+    char dir[50];/*TODO MAGIC*/
     char path_cp[50];
      
     /*execute the cd*/
@@ -194,7 +194,14 @@ int exec_pipes(stage_stats **stats) {
     int one[2] = {0};
     int i;
     pid_t child1, child2;
-     
+    int num_children;
+    int fd[2];
+    int readfd[num_children];
+    int writefd[num_children];    
+    int procID[num_children];
+ 
+    
+
     if ( pipe(one) ) { 
         perror("First pipe"); 
         exit(-1);
