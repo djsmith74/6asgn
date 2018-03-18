@@ -1,10 +1,14 @@
 /*io.c: handles all i/o required for command line*/
+
 #include "io.h"
+#include "mush.h"
+#include "main.h"
 
 /*returns a char pointer to the whole line input by the user*/
 void get_input(char *input) {
    int c;
 
+   
    /* checking if stdin and stdout are tty */
    if (isatty(fileno(stdin)) == 1 && isatty(fileno(stdout)) == 1) {
        printf("8-P ");
@@ -13,14 +17,16 @@ void get_input(char *input) {
    /*get input from user*/
    if (fgets(input, MAX_IN + 5, stdin) == NULL) {
        if (feof(stdin)) {
-           printf("someone pressed that ^D AHAH\n");
+           printf("^D\n");
            exit(EXIT_SUCCESS);
        }
    } 
-   if (strcmp(input, "\n") == 0) {
-       perror("empty file");
-       exit(EXIT_FAILURE);
+
+
+   if (strcmp(input, "\n") == 0) { /*TODO*/
+       execute_command_line();
    }
+
 
    /*check if more than 512 chars (bytes) were given*/
    if (strlen(input) > MAX_IN) {

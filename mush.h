@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include "exec.h"
 #include "pline.h"
+#include "main.h"
 
 #define MAX_LINE 512
 int execute_file(FILE *file);
