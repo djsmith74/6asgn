@@ -54,17 +54,14 @@ int execute_command_line () {
 
     sigaction(SIGINT, &sa, NULL);
 
-    printf("dab\n");
     while (1) {
 
         get_input(in_line);
         strncpy(new_buff, in_line, MAX_LINE);
         max = divide_line(in_line, buffer);
 
-        printf("in_line: %s\n", in_line);
         list = parsing(in_line, buffer, max);
 
-        printf("argument: %s\n", list[0]->arg_list[0]);
         /* execute the command */
         exec_main(list); 
     }
@@ -80,11 +77,10 @@ void sigint_handler(int signum) {
     char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));*/
 
  
-    printf("once\n");
-    if (first == 1) {
-        /*printf("\n");*/
-        first = 0;
-    }
+    printf("\n8-P ");
+    fflush(stdout);
+    first = 0;
+ 
     sa.sa_handler = &sigint_handler;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;

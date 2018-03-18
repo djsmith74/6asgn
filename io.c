@@ -7,11 +7,14 @@
 /*returns a char pointer to the whole line input by the user*/
 void get_input(char *input) {
    int c;
-
+   /*input = calloc(MAX_IN + 5, sizeof(char));*/
    
    /* checking if stdin and stdout are tty */
    if (isatty(fileno(stdin)) == 1 && isatty(fileno(stdout)) == 1) {
-       printf("8-P ");
+       if (first == 0) {
+           printf("8-P ");
+           first = 1;
+       }
    }
         
    /*get input from user*/
