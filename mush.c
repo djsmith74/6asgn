@@ -70,15 +70,7 @@ int execute_command_line () {
 
 void sigint_handler(int signum) {
     struct sigaction sa;
-    /*stage_stats **list;
-    int max;
-    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
-    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
-    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));*/
 
-    /*if (-1 == wait(NULL)) {
-        perror("wait");
-    } */
     wait(NULL);
     printf("\n8-P ");
     fflush(stdout);
@@ -90,16 +82,4 @@ void sigint_handler(int signum) {
 
     sigaction(SIGINT, &sa, NULL);
 
-    /*while (1) {
-
-        get_input(in_line);
-        strncpy(new_buff, in_line, MAX_LINE);
-        max = divide_line(in_line, buffer);
-
-        list = parsing(in_line, buffer, max);
-
-        printf("argument: %s\n", list[0]->arg_list[0]);
-        exec_main(list); 
-    }*/
 }
-
