@@ -62,7 +62,6 @@ int execute_command_line () {
 
         list = parsing(in_line, buffer, max);
 
-        printf("post parseline\n");  
         printf("argument: %s\n", list[0]->arg_list[0]);
         /* execute the command */
         exec_main(list); 
