@@ -71,9 +71,9 @@ void sigint_handler(int signum) {
     struct sigaction sa;
 
     /*wait(NULL);*/
-    
+    printf("\n"); 
     if (first != 1) {
-        printf("\n8-P ");
+        printf("8-P ");
         fflush(stdout);
     }
     first = 0;
