@@ -54,6 +54,7 @@ int execute_command_line () {
 
     sigaction(SIGINT, &sa, NULL);
 
+    printf("dab\n");
     while (1) {
 
         get_input(in_line);
@@ -71,16 +72,35 @@ int execute_command_line () {
 
 void sigint_handler(int signum) {
     struct sigaction sa, old;
+    stage_stats **list;
+    int max;
+    char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
+    char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
+    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
+
  
-    printf("\nCtrl-C was pressed\n");
-    /*printf("8-P ");*/
     fflush(stdout);
-    /*sa.sa_handler = SIG_IGN;
-    sigaction(SIGINT, &sa, &old);
-    kill(0, SIGINT);
-    sigaction(SIGINT, &old, NULL);
-    while(wait(NULL) != -1) {}
-    printf("handler");
-    c_terminate = 1;*/
+    printf("\n");
+    if (first == 1) {
+        /*printf("\n");*/
+        first = 0;
+    }
+    sa.sa_handler = &sigint_handler;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = SA_RESTART;
+
+    sigaction(SIGINT, &sa, NULL);
+
+    /*while (1) {
+
+        get_input(in_line);
+        strncpy(new_buff, in_line, MAX_LINE);
+        max = divide_line(in_line, buffer);
+
+        list = parsing(in_line, buffer, max);
+
+        printf("argument: %s\n", list[0]->arg_list[0]);
+        exec_main(list); 
+    }*/
 }
 

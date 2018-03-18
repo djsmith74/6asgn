@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include "mush.h"
 
+static int first = 1;
+
 #define MAX_PATH 512
+
 
 #endif

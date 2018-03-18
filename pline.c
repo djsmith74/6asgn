@@ -216,10 +216,10 @@ stage_stats **parsing(char *in_line, char **buffer, int max) {
     if (output == NULL) {
         output = stdout_line;
     }*/
-    if (num_args == 0) {
+    /*if (num_args == 0) {
         perror("empty");
         exit(EXIT_FAILURE);
-    }
+    }*/
     stage_list[struct_index] = createStage(input, output, num_args, arguments);
 
     if (pipe_num > 0) {
