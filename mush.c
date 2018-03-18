@@ -19,7 +19,6 @@ int execute_file (FILE *file) {
     sa.sa_flags = SA_RESTART;
 
     sigaction(SIGINT, &sa, NULL);
-    printf("haters dab back\n");
     
 
     while (fgets(in_line, MAX_LINE_LEN+5, file) != NULL) {
@@ -71,7 +70,7 @@ int execute_command_line () {
 void sigint_handler(int signum) {
     struct sigaction sa;
 
-    wait(NULL);
+    /*wait(NULL);*/
     printf("\n8-P ");
     fflush(stdout);
     first = 0;
