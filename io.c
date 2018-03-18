@@ -9,6 +9,8 @@ int first = 0;
 /*returns a char pointer to the whole line input by the user*/
 void get_input(char *input) {
    int c;
+   char *token;
+   char *temp = calloc(strlen(input), sizeof(char));
    /*input = calloc(MAX_IN + 5, sizeof(char));*/
    
    /* checking if stdin and stdout are tty */
@@ -27,7 +29,9 @@ void get_input(char *input) {
        }
    } 
 
-   if (strcmp(input, "sleep") == 0) {
+   strcpy(temp, input);
+   token = strtok(temp, " ");
+   if (strcmp(token, "sleep") == 0) {
        first = 1;
    }
 
