@@ -9,7 +9,6 @@ void exec_main(stage_stats **stats) {
     int child_status;
     int i;
     int list_len;
-    char *cmd;
     
     list_len = 0;
     i = 0;
@@ -18,17 +17,12 @@ void exec_main(stage_stats **stats) {
         list_len++; 
         i++;
     }
-    /*printf("number of stages: %d\n", list_len);
-
-    printf("list_len: %d\n", list_len);*/
 
     i = 0;
     
-    /*printf("before actual execution\n");*/
     if (list_len == 1) {
         /*check if cd*/
         if (strcmp(stats[0]->arg_list[0], "cd") == 0) {
-            /*printf("in the chdir\n");*/
             if (stats[0]->num_args == 2) {
                 cd(stats[0]->arg_list[1]); 
             }
@@ -37,9 +31,6 @@ void exec_main(stage_stats **stats) {
             }
         }
         else {
-             /*printf("trying to execute \n"); 
-             cmd = stats[i]->arg_list[0];
-             printf("command: '%s'\n", cmd);*/
              child = fork();
              if (child == -1) {
                  perror("fork");
@@ -70,28 +61,14 @@ void exec_main(stage_stats **stats) {
 }    
 
 int cd(char *path) {
-    char *dir = calloc(50, sizeof(char)); /*get rid of magic*/
-    char *path_cp = calloc(50, sizeof(char));
+    char *dir = calloc(DIR_SIZE, sizeof(char)); 
+    char *path_cp = calloc(PATH_SIZE, sizeof(char));
      
-    /*execute the cd*/
-    /*if (getcwd(cwd, sizeof(cwd)) == NULL) {
-          perror("getcwd");
-          exit(EXIT_FAILURE);
-      }
-      strcat(cwd, stats[0]->arg_list[1]);*/
-      /*printf("argument for cd: %s\n", stats[0]->arg_list[1]);*/
-      strcpy(path_cp, path);
-      /*printf("path: %s\n", path);*/
-      strcat(dir, path_cp);
-      strcat(dir, "/");
-      /*printf("hello\n");*/
-      /*if (chdir((stats[0]->arg_list[1])) == -1) {
-          perror(stats[0]->arg_list[1]);
-          exit(EXIT_FAILURE);
-       }
-      printf("dir: %s\n", dir);*/
-      chdir(dir);
-      return 0;          
+    strcpy(path_cp, path);
+    strcat(dir, path_cp);
+    strcat(dir, "/");
+    chdir(dir);
+    return 0;          
 }
 
 int exec_command(stage_stats **stats) {
@@ -108,13 +85,11 @@ int exec_command(stage_stats **stats) {
          
          } 
          if ( stats[i]->output_line != NULL ) {
-             printf("have an output file\n");
              out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY | O_TRUNC, 0666);
              dup2(out_fd, STDOUT_FILENO);
          }
 
          execvp(stats[i]->arg_list[0], stats[i]->arg_list);
-         /*fflush(stdout);*/   
      }
      else {
          while (wait(&child_status) != child1) 
@@ -125,7 +100,6 @@ int exec_command(stage_stats **stats) {
 
 int exec_single_pipe(stage_stats **stats) {
     int in_fd, out_fd;
-    int child_status;
     int one[2] = {0};
     int i;
     pid_t child1, child2;
@@ -213,7 +187,6 @@ int exec_two_pipes(stage_stats **stats) {
     if (!(child1 = fork())) {
         i = 0;
         if (stats[i]->input_line != NULL) {
-                printf("first stage, input redirection\n");
                 in_fd = open(stats[i]->input_line, O_RDONLY);
                 if (-1 == dup2(in_fd, STDIN_FILENO)) {
                     perror("dup2");
@@ -262,7 +235,6 @@ int exec_two_pipes(stage_stats **stats) {
     if (!(child3 = fork())) {
         i = 2;
         if (stats[i]->output_line != NULL) {
-                printf("end stage, output redirection\n");
                 out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY | O_TRUNC, 0666);
                 if (-1 == dup2(out_fd, STDOUT_FILENO)) {
                     perror("dup2");
@@ -280,7 +252,6 @@ int exec_two_pipes(stage_stats **stats) {
         close(two[WRITE_END]);
 
         execvp(stats[i]->arg_list[0], stats[i]->arg_list);
-        /*fflush(stdout);*/
         perror(stats[i]->arg_list[0]);
         exit(-1);
     }
@@ -307,7 +278,6 @@ int exec_more_pipes(stage_stats **stats, int l_len) {
     int two[2];
     int i;
     int procID[l_len];
-    pid_t child1, child2, child3;
     int in_fd, out_fd;
    
     if (pipe(one)) {
@@ -315,15 +285,10 @@ int exec_more_pipes(stage_stats **stats, int l_len) {
         exit(-1);
     }
     
-    /*if (pipe(two)) {
-        perror("Second pipe");
-        exit(-1);
-    }*/
     i = 0;
     if (!(procID[i] = fork())) {
         i = 0;
         if (stats[i]->input_line != NULL) {
-                printf("first stage, input redirection\n");
                 in_fd = open(stats[i]->input_line, O_RDONLY);
                 if (-1 == dup2(in_fd, STDIN_FILENO)) {
                     perror("dup2");
@@ -337,11 +302,8 @@ int exec_more_pipes(stage_stats **stats, int l_len) {
 
         close(one[READ_END]);
         close(one[WRITE_END]);
-        /*close(two[READ_END]);
-        close(two[WRITE_END]);*/
    
         execvp(stats[i]->arg_list[0], stats[i]->arg_list);
-        /*fflush(stdout);*/
         perror(stats[i]->arg_list[0]);
         exit(-1);
     }
@@ -359,7 +321,6 @@ int exec_more_pipes(stage_stats **stats, int l_len) {
                 exit(-1);
             }
             if ((i == l_len-1) && (stats[i]->output_line != NULL)) {
-                printf("end stage, output redirection\n");
                 out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY | O_TRUNC, 0666);
                 if (-1 == dup2(out_fd, STDOUT_FILENO)) {
                     perror("dup2");
@@ -378,7 +339,6 @@ int exec_more_pipes(stage_stats **stats, int l_len) {
             close(two[WRITE_END]);
 
             execvp(stats[i]->arg_list[0], stats[i]->arg_list);
-            /*fflush(stdout);*/
             perror(stats[i]->arg_list[0]);
             exit(-1);
         }

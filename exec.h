@@ -14,6 +14,8 @@
 
 #define READ_END 0
 #define WRITE_END 1
+#define DIR_SIZE 200
+#define PATH_SIZE 200
 
 void exec_main(stage_stats **stats); 
 int cd(char *path);

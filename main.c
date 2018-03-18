@@ -1,7 +1,6 @@
 #include "main.h"
 
 int main (int argc, char *argv[]) {
-    int fd;
     FILE *file;
   
     /* Read from standard input */
@@ -11,7 +10,6 @@ int main (int argc, char *argv[]) {
     /* Read from provided file */
     else if (argc == 2) {
         if ((file = fopen(argv[1], "r")) == NULL) {
-            printf("ya boy\n");
             perror(argv[1]);
             exit(EXIT_FAILURE);
         }
