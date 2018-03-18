@@ -4,6 +4,8 @@
 #include "mush.h"
 #include "main.h"
 
+int first = 0;
+
 /*returns a char pointer to the whole line input by the user*/
 void get_input(char *input) {
    int c;

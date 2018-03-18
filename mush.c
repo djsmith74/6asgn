@@ -2,6 +2,7 @@
 #include "io.h"
 
 static int c_terminate;
+/*int first = 0;*/
 
 int execute_file (FILE *file) {
     struct sigaction sa;
@@ -9,7 +10,6 @@ int execute_file (FILE *file) {
     int max;
     char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
     char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
-    char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));
     char *pos;
 
     c_terminate = 0;
@@ -69,14 +69,17 @@ int execute_command_line () {
 }
 
 void sigint_handler(int signum) {
-    struct sigaction sa, old;
+    struct sigaction sa;
     /*stage_stats **list;
     int max;
     char *in_line = calloc(MAX_LINE_LEN+5, sizeof(char));
     char **buffer = calloc(MAX_LINE_LEN+1, sizeof(char*));
     char *new_buff = calloc(MAX_LINE_LEN+1, sizeof(char));*/
 
- 
+    /*if (-1 == wait(NULL)) {
+        perror("wait");
+    } */
+    wait(NULL);
     printf("\n8-P ");
     fflush(stdout);
     first = 0;

@@ -11,6 +11,10 @@
 #include "main.h"
 
 #define MAX_LINE 512
+
+
+extern int first;
+
 int execute_file(FILE *file);
 int execute_command_line();
 void sigint_handler(int signum);

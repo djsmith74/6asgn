@@ -5,8 +5,6 @@
 #include "exec.h"
 
 void exec_main(stage_stats **stats) {
-    pid_t child;
-    int child_status;
     int i;
     int list_len;
     
@@ -74,7 +72,6 @@ int cd(char *path) {
 int exec_command(stage_stats **stats) {
      int in_fd, out_fd;
      int i;
-     int child_status;
      pid_t child1;
 
      i = 0;
