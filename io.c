@@ -15,7 +15,7 @@ void get_input(char *input) {
    if (isatty(fileno(stdin)) == 1 && isatty(fileno(stdout)) == 1) {
        if (first == 0) {
            printf("8-P ");
-           first = 1;
+           /*first = 1;*/
        }
    }
         
@@ -27,6 +27,9 @@ void get_input(char *input) {
        }
    } 
 
+   if (strcmp(input, "sleep") == 0) {
+       first = 1;
+   }
 
    if (strcmp(input, "\n") == 0) { /*TODO*/
        execute_command_line();
