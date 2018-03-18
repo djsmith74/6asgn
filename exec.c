@@ -31,18 +31,18 @@ void exec_main(stage_stats **stats) {
             }
         }
         else {
-             child = fork();
+             /*child = fork();
              if (child == -1) {
                  perror("fork");
                  exit(EXIT_FAILURE);
              }
-             else if (child == 0) {
+             else if (child == 0) {*/
                  exec_command(stats);       
-             }
+             /*}
              else {
                 while (wait(&child_status) != child) 
                     ;
-             }
+             }*/
         }
     }
     else if (list_len == 2) {
@@ -90,10 +90,14 @@ int exec_command(stage_stats **stats) {
          }
 
          execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+         exit(-1);
      }
-     else {
+     /*else {
          while (wait(&child_status) != child1) 
              ;
+     }*/
+     if (-1 == wait(NULL)) {
+         perror("wait");
      }
      return 0;
 }
@@ -128,7 +132,7 @@ int exec_single_pipe(stage_stats **stats) {
 
         /* do the exec */ 
         execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
-        fflush(stdout);
+        /*fflush(stdout);*/
         perror(stats[i]->arg_list[0]);
         exit(-1);
     }
@@ -152,7 +156,7 @@ int exec_single_pipe(stage_stats **stats) {
 
         /* do the exec */ 
         execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
-        fflush(stdout);
+        /*fflush(stdout);*/
         perror(stats[i]->arg_list[0]);
         exit(-1);
     } 
