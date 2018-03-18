@@ -101,7 +101,7 @@ int exec_command(stage_stats **stats) {
          dup2(in_fd, STDIN_FILENO);
      } 
      if ( stats[i]->output_line != NULL ) {
-         out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+         out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY | O_TRUNC, 0666);
          dup2(out_fd, STDOUT_FILENO);
      }
      printf("arg: '%s'\n", stats[i]->arg_list[0]);
@@ -191,28 +191,93 @@ int exec_single_pipe(stage_stats **stats) {
 int exec_pipes(stage_stats **stats, int l_len) {
     int in_fd, out_fd;
     int child_status;
-    int num_children;
     int one[2] = {0};
     int i;
     pid_t child1, child2;
     int k;
-    int fd[2];
-    int readfd[num_children];
-    int writefd[num_children];    
-    int procID[num_children];
+    int fd[2] = {0};
+    int readfd[l_len];
+    int writefd[l_len];    
+    int procID[l_len];
  
-    num_children = l_len - 2;
+    for (i = 0; i < l_len; i++) {
+        if ( pipe(one) ) {
+            perror("pipe");
+            exit(-1); 
+        }
+        /* Storing the pipe ID */
+        readfd[i] = fd[0];
+        writefd[i] = fd[1];
+ 
+        if ((procID[i] = fork()) == -1) {
+            perror("bad fork");
+            exit(EXIT_FAILURE);
+        } 
+        if (procID[i] == 0) {
+            if ((i == 0) && ( stats[i]->input_line != NULL) ) {
+                in_fd = open(stats[i]->input_line, O_RDONLY);
+                dup2(in_fd, STDIN_FILENO);
+                dup2(writefd[i], STDOUT_FILENO);
+                printf("love you :)\n");
+            }
+            else if ((i == (l_len-1)) && (stats[i]->output_line != NULL) ) {
+                out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
+                dup2(out_fd, STDOUT_FILENO);
+                dup2(readfd[i], STDIN_FILENO);
+            } 
+            else {
+                dup2(writefd[i], STDOUT_FILENO);
+            }
 
-    if ( pipe(one) ) { 
+            /* clean up */
+            close(readfd[i]);
+
+            /* do the exec */
+            execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+            fflush(stdout);
+            perror(stats[i]->arg_list[0]);
+            exit(-1);
+       }
+       else {  
+           close(writefd[i]);
+           /*close(readfd[i]);*/
+       }
+ 
+       for (i = 0; i < l_len; i++) {
+           if (-1 == wait(NULL)) {
+               perror("wait");
+           }       
+       }
+    }
+/*if (-1 == dup2(readfd[i], STDIN_FILENO)) {
+                perror("dup2");
+                exit(-1);
+            }*/
+            /*if (-1 == dup2(writefd[i], STDOUT_FILENO)) {
+ *                 perror("dup2");
+ *                                 exit(-1);
+ *                                             }*/
+
+            /* clean up */
+           /* close(readfd[i]);
+ * */
+            /* do the exec */
+           /* execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+ *             fflush(stdout);
+ *                         perror(stats[i]->arg_list[0]);
+ *                                     exit(-1);
+ *
+    }
+    *//*if ( pipe(one) ) { 
         perror("First pipe"); 
         exit(-1);
     }
 
     if (!(child1 = fork())) {
-        i = 0;
+        i = 0;*/
         /* child one stuff */
         /* dup appropriate pipe ends */
-        printf("input line: %s\n", stats[i]->input_line);
+        /*printf("input line: %s\n", stats[i]->input_line);
         if ( stats[i]->input_line != NULL ) {
             in_fd = open(stats[i]->input_line, O_RDONLY);
             dup2(in_fd, STDIN_FILENO);
@@ -225,14 +290,14 @@ int exec_pipes(stage_stats **stats, int l_len) {
             exit(-1);
         }
         printf("pre cleanup\n");
-         
+         */
         /* clean up */ 
-        close(one[READ_END]); 
+        /*close(one[READ_END]); 
         close(one[WRITE_END]); 
         printf("post cleanup\n");
-
+*/
         /* do the exec */ 
-        execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
+  /*      execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
         fflush(stdout);
         perror(stats[i]->arg_list[0]);
         exit(-1);
@@ -242,11 +307,11 @@ int exec_pipes(stage_stats **stats, int l_len) {
         if (pipe(fd)) {
             perror("pipe");
             exit(-1);
-        }
+        }*/
         /* Storing the pipe ID */
-        readfd[i] = fd[0];
+        /*readfd[i] = fd[0];
         writefd[i] = fd[1];
-        /*if (procID[i] = fork() == -1) {
+       */ /*if (procID[i] = fork() == -1) {
             perror("bad fork")
             exit(EXIT_FAILURE);
         } 
@@ -254,21 +319,21 @@ int exec_pipes(stage_stats **stats, int l_len) {
             
             dup2(writefd[i], STDOUT_FILENO);
         }*/
-        if (!(procID[i] = fork())) {
-            /*if (-1 == dup2(readfd[i], STDIN_FILENO)) {
+        /*if (!(procID[i] = fork())) {
+          */  /*if (-1 == dup2(readfd[i], STDIN_FILENO)) {
                 perror("dup2");
                 exit(-1);
             }*/
-            if (-1 == dup2(writefd[i], STDOUT_FILENO)) {
+            /*if (-1 == dup2(writefd[i], STDOUT_FILENO)) {
                 perror("dup2");
                 exit(-1);
-            }
+            }*/
 
             /* clean up */
-            close(readfd[i]);
-
+           /* close(readfd[i]);
+*/
             /* do the exec */
-            execvp(stats[i]->arg_list[0], stats[i]->arg_list);
+           /* execvp(stats[i]->arg_list[0], stats[i]->arg_list);
             fflush(stdout);
             perror(stats[i]->arg_list[0]);
             exit(-1);
@@ -277,9 +342,9 @@ int exec_pipes(stage_stats **stats, int l_len) {
     }
   
     if (!(child2 = fork())) {
-        i = 1;
+        i = 1;*/
         /* child two stuff */
-        if ( stats[i]->output_line != NULL ) {
+        /*if ( stats[i]->output_line != NULL ) {
             out_fd = open(stats[i]->output_line, O_CREAT | O_WRONLY);
             dup2(out_fd, STDOUT_FILENO);
         }
@@ -287,14 +352,14 @@ int exec_pipes(stage_stats **stats, int l_len) {
         if (-1 == dup2(one[READ_END], STDIN_FILENO)) {    
             perror("dup2");
             exit(-1); 
-        }
+        }*/
 
         /* clean up */ 
-        close(one[READ_END]); 
+        /*close(one[READ_END]); 
         close(one[WRITE_END]);
-
+*/
         /* do the exec */ 
-        execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
+        /*execvp(stats[i]->arg_list[0], stats[i]->arg_list); 
         fflush(stdout);
         perror(stats[i]->arg_list[0]);
         exit(-1);
@@ -307,7 +372,7 @@ int exec_pipes(stage_stats **stats, int l_len) {
     }
     if (-1 == wait(NULL)) {
         perror("wait");
-    }    
+    }    */
     return 0;
 }
 
